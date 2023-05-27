@@ -1,5 +1,7 @@
 import * as PIXI from "pixi.js";
 
+const { default: Block } = require("./Block");
+
 const BRD_HEIGHT = 20;
 const BRD_WIDTH = 10;
 
