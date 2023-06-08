@@ -19,11 +19,10 @@ for (let m = 0; m < board.length; m++) {
 }
 
 //Buffer for creating new tetrominoes
-const buffer = new Array(4).fill(new Array(BRD_WIDTH).fill(0));
-for (let m = 0; m < buffer.length; m++) {
-    buffer[m] = [];
+for (let m = 0; m < 4; m++) {
+    board.push([]);
     for (let k = 0; k < BRD_WIDTH; k++) {
-        buffer[m].push(0);
+        board[board.length-1].push(0);
     }
 }
 
