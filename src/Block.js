@@ -6,32 +6,38 @@ export default class Block {
     shapeArray;
     color;
 
-    constructor(x, shape, rot, color) {
+    constructor(x, shape, rot) {
         this.x = x;
-        this.color = color;
 
         //Parses shape name to array
         switch(shape) {
             case "I":
                 this.shapeArray = [[1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+                this.color = 0x00FFFF; //cyan
                 break;
             case "O":
                 this.shapeArray = [[1,1],[1,1],[0,0],[0,0]];
+                this.color = 0xFFFF00; //yellow
                 break;
             case "T":
                 this.shapeArray = [[1,1,1],[0,1,0],[0,0,0]];
+                this.color = 0x800080; //purple
                 break;
             case "S":
                 this.shapeArray = [[0,1,1],[1,1,0],[0,0,0]];
+                this.color = 0x008000; //green
                 break;
             case "Z":
                 this.shapeArray = [[1,1,0],[0,1,1],[0,0,0]];
+                this.color = 0xFF0000; //red
                 break;
             case "J":
                 this.shapeArray = [[1,0,0],[1,1,1],[0,0,0]];
+                this.color = 0x0000FF; //blue
                 break;
             case "L":
                 this.shapeArray = [[0,0,1],[1,1,1],[0,0,0]];
+                this.color = 0xFFA500; //orange
                 break;
         }
         for (let i = 0; i < rot; i++) {
