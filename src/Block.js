@@ -5,48 +5,49 @@ export default class Block {
     y = 0;
     shapeArray;
     color;
+    size = 3;
 
-    constructor(x, shape, rot) {
-        this.x = x;
-
+    constructor(shape, rot) {
         //Parses shape name to array
         switch(shape) {
-            case "I":
-                this.shapeArray = [[1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+            case 0:
+                this.shapeArray = [[1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]]
                 this.color = 0x00FFFF; //cyan
+                this.size = 4;
                 break;
-            case "O":
+            case 1:
                 this.shapeArray = [[1,1],[1,1],[0,0],[0,0]];
                 this.color = 0xFFFF00; //yellow
+                this.size = 4;
                 break;
-            case "T":
+            case 2:
                 this.shapeArray = [[1,1,1],[0,1,0],[0,0,0]];
                 this.color = 0x800080; //purple
                 break;
-            case "S":
+            case 3:
                 this.shapeArray = [[0,1,1],[1,1,0],[0,0,0]];
                 this.color = 0x008000; //green
                 break;
-            case "Z":
+            case 4:
                 this.shapeArray = [[1,1,0],[0,1,1],[0,0,0]];
                 this.color = 0xFF0000; //red
                 break;
-            case "J":
+            case 5:
                 this.shapeArray = [[1,0,0],[1,1,1],[0,0,0]];
                 this.color = 0x0000FF; //blue
                 break;
-            case "L":
+            case 6:
                 this.shapeArray = [[0,0,1],[1,1,1],[0,0,0]];
                 this.color = 0xFFA500; //orange
                 break;
         }
+        //Rotate shape as many times as asked
         for (let i = 0; i < rot; i++) {
             this.shapeArray = this.rotate();
         }
     }
 
     rotate() {
-        //Rotate shape as many times as asked
         let auxArr = new Array(this.shapeArray.length);
         for (let m = 0; m < auxArr.length; m++) {
             auxArr[m] = [];

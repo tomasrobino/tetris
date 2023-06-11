@@ -37,11 +37,16 @@ function getBoard() {
 window.onload = function() {
     var app = new PIXI.Application({ width: WIDTH, height: HEIGHT, backgroundColor: 0x000000 });
     document.body.appendChild(app.view);
-    var spriteList = [];
     //Each square 50 width
     //Total width of playing field BRD_WIDTH * 50 = 500
 
-    //Draw backgroung for playing field
+    //############################################
+    //#                                          #
+    //#         DRAWING BACKGROUND STUFF         #
+    //#                                          #
+    //############################################
+
+    //Draw background for playing field
     var fieldBackground = new PIXI.Graphics();
     fieldBackground.beginFill(0xf52c1d);
     fieldBackground.drawRect(OFFSET, 0, SQUARE_SIZE*BRD_WIDTH, SQUARE_SIZE*BRD_HEIGHT);
@@ -71,6 +76,27 @@ window.onload = function() {
     linesH.forEach(element => {
         app.stage.addChild(element);
     });
+
+
+    //#######################################
+    //#                                     #
+    //#         DRAWING GAME ITSELF         #
+    //#                                     #
+    //#######################################
+
+    //Creates instance of Block, spaws it in the buffer
+    var blockLanded = true;
+
+    function spawner() {
+        //If block has already settled spawns a new block
+        if (blockLanded) {
+            //Creates a new block
+            var block = new Block(Math.floor(Math.random() * 7), Math.floor(Math.random() * 4)); //7 block shapes
+            block.x = Math.floor(Math.random() * (board.length-(block.size-1)));
+        }
+    }
+
+    //setInterval(spawner, 5000);
 }
 
 
