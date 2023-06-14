@@ -18,6 +18,15 @@ for (let m = 0; m < board.length; m++) {
     }
 }
 
+//Board for keeping account of drawn squares
+const colorBoard = new Array(BRD_HEIGHT);
+for (let m = 0; m < colorBoard.length; m++) {
+    colorBoard[m] = [];
+    for (let k = 0; k < BRD_WIDTH; k++) {
+        colorBoard[m].push(0);
+    }
+}
+
 //Buffer for creating new tetrominoes
 for (let m = 0; m < 4; m++) {
     board.push([]);
@@ -77,7 +86,6 @@ window.onload = function() {
         app.stage.addChild(element);
     });
 
-
     //#######################################
     //#                                     #
     //#         DRAWING GAME ITSELF         #
@@ -85,18 +93,26 @@ window.onload = function() {
     //#######################################
 
     //Creates instance of Block, spaws it in the buffer
-    var blockLanded = true;
+    var block;
 
     function spawner() {
-        //If block has already settled spawns a new block
-        if (blockLanded) {
-            //Creates a new block
-            var block = new Block(Math.floor(Math.random() * 7), Math.floor(Math.random() * 4)); //7 block shapes
-            block.x = Math.floor(Math.random() * (board.length-(block.size-1)));
+        //Creates a new block
+        block = new Block(Math.floor(Math.random() * 7), Math.floor(Math.random() * 4)); //7 block shapes
+        block.x = Math.floor(Math.random() * (board.length-(block.size-1))); //TODO: Check it's not overwriting another block
+        
+        //Copy block's shapeArray to board array at defined spawn place
+        //It'll spawn first in the invisible buffer zone (first 4 elements)
+        for (let i = 0; i < block.shapeArray.length; i++) {
+            for (let k = 0; k < block.shapeArray[0].length; k++) {
+                if (block.shapeArray[i][k] === 1) {
+                    board[i][k+block.x] = 2;
+                    colorBoard[i][k] = new PIXI.Graphics();
+                    colorBoard[i][k].beginFill(block.color);
+                    colorBoard[i][k].drawRect(OFFSET + k*SQUARE_SIZE, i*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                }
+            }
         }
     }
-
-    //setInterval(spawner, 5000);
 }
 
 

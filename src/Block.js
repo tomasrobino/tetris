@@ -2,7 +2,7 @@ import { getBoard } from ".";
 
 export default class Block {
     x;
-    y = 0;
+    y = 1;
     shapeArray;
     color;
     size = 3;
@@ -14,11 +14,13 @@ export default class Block {
                 this.shapeArray = [[1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]]
                 this.color = 0x00FFFF; //cyan
                 this.size = 4;
+                this.y = 0;
                 break;
             case 1:
-                this.shapeArray = [[1,1],[1,1],[0,0],[0,0]];
+                this.shapeArray = [[1,1,0,0],[1,1,0,0],[0,0,0,0],[0,0,0,0]];
                 this.color = 0xFFFF00; //yellow
                 this.size = 4;
+                this.y = 0;
                 break;
             case 2:
                 this.shapeArray = [[1,1,1],[0,1,0],[0,0,0]];
