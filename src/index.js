@@ -30,8 +30,10 @@ for (let m = 0; m < colorBoard.length; m++) {
 //Buffer for creating new tetrominoes
 for (let m = 0; m < 4; m++) {
     board.push([]);
+    colorBoard.push([]);
     for (let k = 0; k < BRD_WIDTH; k++) {
         board[board.length-1].push(0);
+        colorBoard[colorBoard.length-1].push(0);
     }
 }
 
@@ -59,6 +61,7 @@ window.onload = function() {
     var fieldBackground = new PIXI.Graphics();
     fieldBackground.beginFill(0xf52c1d);
     fieldBackground.drawRect(OFFSET, 0, SQUARE_SIZE*BRD_WIDTH, SQUARE_SIZE*BRD_HEIGHT);
+    fieldBackground.endFill();
 
     //Creates lines dividing squares
     var linesV = [];
@@ -95,24 +98,107 @@ window.onload = function() {
     //Creates instance of Block, spaws it in the buffer
     var block;
 
-    function spawner() {
+    function spawn() {
         //Creates a new block
         block = new Block(Math.floor(Math.random() * 7), Math.floor(Math.random() * 4)); //7 block shapes
-        block.x = Math.floor(Math.random() * (board.length-(block.size-1))); //TODO: Check it's not overwriting another block
+        block.x = Math.floor(Math.random() * (BRD_WIDTH-(block.size-1))); //TODO: Check it's not overwriting another block
         
         //Copy block's shapeArray to board array at defined spawn place
         //It'll spawn first in the invisible buffer zone (first 4 elements)
         for (let i = 0; i < block.shapeArray.length; i++) {
-            for (let k = 0; k < block.shapeArray[0].length; k++) {
+            for (let k = 0; k < block.shapeArray[i].length; k++) {
                 if (block.shapeArray[i][k] === 1) {
                     board[i][k+block.x] = 2;
-                    colorBoard[i][k] = new PIXI.Graphics();
-                    colorBoard[i][k].beginFill(block.color);
-                    colorBoard[i][k].drawRect(OFFSET + k*SQUARE_SIZE, i*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                    colorBoard[i][k+block.x] = new PIXI.Graphics();
+                    colorBoard[i][k+block.x].beginFill(block.color);
+                    colorBoard[i][k+block.x].drawRect(OFFSET + (k+block.x)*SQUARE_SIZE, (i-4)*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                    colorBoard[i][k+block.x].endFill();
+                    app.stage.addChild(colorBoard[i][k+block.x]);
                 }
             }
         }
+
+        
+        let flag = true;
+        while (flag) {
+            board[3].forEach(element => {
+                if (element === 2) {
+                    flag = false;
+                }
+            });
+            move();
+        }
     }
+
+    function move() {
+        for (let i = block.shapeArray.length-1; i > -1; i--) {
+            for (let k = 0; k < block.shapeArray[i].length; k++) {
+                if (block.shapeArray[i][k] === 1) {
+                    if (i+1 === BRD_HEIGHT+3) {
+                        //Block reached end
+                        //Solidify Block
+                        //solidify();
+                        return 1;
+                    }
+
+                    if (board[i+1][k+block.x] === 1) {
+                        //TODO: Found a square directly below the Block
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        //Moves the block logically
+        for (let i = block.shapeArray.length-1; i > -1; i--) {
+            for (let k = 0; k < block.shapeArray[i].length; k++) {
+                if (block.shapeArray[i][k] === 1) {
+                    board[i+block.y][k+block.x] = 0;
+                    board[i+1+block.y][k+block.x] = 2;
+                    /*
+                    colorBoard[i+block.y][k+block.x] = 0;
+                    app.stage.removeChild(colorBoard[i+block.y][k+block.x]);
+                    colorBoard[i+1+block.y][k+block.x] = new PIXI.Graphics();
+                    colorBoard[i+1+block.y][k+block.x].beginFill(block.color);
+                    colorBoard[i+1+block.y][k+block.x].drawRect(OFFSET + (k+block.x)*SQUARE_SIZE, (i-4+1+block.y)*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                    colorBoard[i+1+block.y][k+block.x].endFill();
+                    app.stage.addChild(colorBoard[i+1+block.y][k+block.x]);
+                    */
+                    colorBoard[i+1+block.y][k+block.x] = colorBoard[i+block.y][k+block.x];
+                    colorBoard[i+block.y][k+block.x] = 0;
+                    colorBoard[i+1+block.y][k+block.x].position.y += SQUARE_SIZE;
+
+                }
+            }
+        }
+        block.setY(block.y+1);
+    }
+
+    function solidify() {
+        for (let i = 0; i < block.shapeArray.length; i++) {
+            for (let k = 0; k < block.shapeArray[i].length; k++) {
+                if (block.shapeArray[i][k] === 1) {
+                    board[i][k+block.x] = 1;
+                }
+            }
+        }
+
+        delete block.x;
+        delete block.y;
+        delete block.shapeArray;
+        delete block.color;
+        delete block.size;
+    }
+
+    spawn();
+    move();
+    move();
+    move();
+    move();
+    move();
+    move();
+    move();
+    move();
 }
 
 
