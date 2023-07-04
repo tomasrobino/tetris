@@ -99,9 +99,7 @@ window.onload = function() {
     var block;
 
     spawn();
-    setInterval(move(), 1000);
-
-    
+    setInterval(move, 1000);
 
     function spawn() {
         //Creates a new block
@@ -123,31 +121,33 @@ window.onload = function() {
             }
         }
 
-        
-        let flag = true;
-        while (flag) {
-            board[3].forEach(element => {
-                if (element === 2) {
-                    flag = false;
+        w:
+        while (true) {
+            for (let k = 0; k < board[3].length; k++) {
+                if (board[3][k] === 2) {
+                    break w;
                 }
-            });
+            }
             move();
         }
     }
 
     function move() {
+        console.log("moving");
         for (let i = block.shapeArray.length-1; i > -1; i--) {
             for (let k = 0; k < block.shapeArray[i].length; k++) {
                 if (block.shapeArray[i][k] === 1) {
                     if (i+1 === BRD_HEIGHT+3) {
-                        //Block reached end
+                        //Block reached bottom
                         //Solidify Block
                         //solidify();
+                        console.log("block reached bottom");
                         return 1;
                     }
 
                     if (board[i+1][k+block.x] === 1) {
                         //TODO: Found a square directly below the Block
+                        console.log("block reached square, call solidify()");
                         return 0;
                     }
                 }
@@ -183,7 +183,7 @@ window.onload = function() {
         for (let i = 0; i < block.shapeArray.length; i++) {
             for (let k = 0; k < block.shapeArray[i].length; k++) {
                 if (block.shapeArray[i][k] === 1) {
-                    board[i][k+block.x] = 1;
+                    board[i+block.y][k+block.x] = 1;
                 }
             }
         }
@@ -194,16 +194,6 @@ window.onload = function() {
         delete block.color;
         delete block.size;
     }
-
-    spawn();
-    move();
-    move();
-    move();
-    move();
-    move();
-    move();
-    move();
-    move();
 }
 
 
