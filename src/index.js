@@ -98,6 +98,11 @@ window.onload = function() {
     //Creates instance of Block, spaws it in the buffer
     var block;
 
+    spawn();
+    setInterval(move(), 1000);
+
+    
+
     function spawn() {
         //Creates a new block
         block = new Block(Math.floor(Math.random() * 7), Math.floor(Math.random() * 4)); //7 block shapes
