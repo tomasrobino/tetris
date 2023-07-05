@@ -138,20 +138,12 @@ window.onload = function() {
             for (let i = block.shapeArray.length-1; i > -1; i--) {
                 for (let k = 0; k < block.shapeArray[i].length; k++) {
                     if (block.shapeArray[i][k] === 1) {
-                        if (i+1+block.y === BRD_HEIGHT+4) {
-                            //Block reached bottom
+                        if (i+1+block.y === BRD_HEIGHT+4 || board[i+1+block.y][k+block.x] === 1) {
+                            //Block reached bottom or square
                             //Solidify Block
-                            console.log("block reached bottom");
                             solidify();
                             setTimeout(spawn, 3000);
-                            
                             return 1;
-                        } else if (board[i+1+block.y][k+block.x] === 1) {
-                            //TODO: Found a square directly below the Block
-                            console.log("block reached square");
-                            solidify();
-                            setTimeout(spawn, 3000);
-                            return 2;
                         }
                     }
                 }
