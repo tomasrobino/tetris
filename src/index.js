@@ -99,7 +99,7 @@ window.onload = function() {
     var block;
 
     spawn();
-    setInterval(move, 1000);
+    setInterval(downer, 1000);
 
     function spawn() {
         //Creates a new block
@@ -128,58 +128,54 @@ window.onload = function() {
                     break w;
                 }
             }
-            move();
+            downer();
         }
     }
 
-    function move() {
-        console.log("moving");
-        for (let i = block.shapeArray.length-1; i > -1; i--) {
-            for (let k = 0; k < block.shapeArray[i].length; k++) {
-                if (block.shapeArray[i][k] === 1) {
-                    if (i+1 === BRD_HEIGHT+3) {
-                        //Block reached bottom
-                        //Solidify Block
-                        //solidify();
-                        console.log("block reached bottom");
-                        return 1;
-                    }
-
-                    if (board[i+1][k+block.x] === 1) {
-                        //TODO: Found a square directly below the Block
-                        console.log("block reached square, call solidify()");
-                        return 0;
+    function downer() {
+        if (block !== null) {
+            console.log("moving");
+            for (let i = block.shapeArray.length-1; i > -1; i--) {
+                for (let k = 0; k < block.shapeArray[i].length; k++) {
+                    if (block.shapeArray[i][k] === 1) {
+                        if (i+1+block.y === BRD_HEIGHT+4) {
+                            //Block reached bottom
+                            //Solidify Block
+                            console.log("block reached bottom");
+                            solidify();
+                            setTimeout(spawn, 3000);
+                            
+                            return 1;
+                        }
+    
+                        if (board[i+1][k+block.x] === 1) {
+                            //TODO: Found a square directly below the Block
+                            console.log("block reached square, call solidify()");
+                            return 2;
+                        }
                     }
                 }
             }
-        }
-
-        //Moves the block logically
-        for (let i = block.shapeArray.length-1; i > -1; i--) {
-            for (let k = 0; k < block.shapeArray[i].length; k++) {
-                if (block.shapeArray[i][k] === 1) {
-                    board[i+block.y][k+block.x] = 0;
-                    board[i+1+block.y][k+block.x] = 2;
-                    /*
-                    colorBoard[i+block.y][k+block.x] = 0;
-                    app.stage.removeChild(colorBoard[i+block.y][k+block.x]);
-                    colorBoard[i+1+block.y][k+block.x] = new PIXI.Graphics();
-                    colorBoard[i+1+block.y][k+block.x].beginFill(block.color);
-                    colorBoard[i+1+block.y][k+block.x].drawRect(OFFSET + (k+block.x)*SQUARE_SIZE, (i-4+1+block.y)*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-                    colorBoard[i+1+block.y][k+block.x].endFill();
-                    app.stage.addChild(colorBoard[i+1+block.y][k+block.x]);
-                    */
-                    colorBoard[i+1+block.y][k+block.x] = colorBoard[i+block.y][k+block.x];
-                    colorBoard[i+block.y][k+block.x] = 0;
-                    colorBoard[i+1+block.y][k+block.x].position.y += SQUARE_SIZE;
-
+    
+            //Moves the block logically
+            for (let i = block.shapeArray.length-1; i > -1; i--) {
+                for (let k = 0; k < block.shapeArray[i].length; k++) {
+                    if (block.shapeArray[i][k] === 1) {
+                        board[i+block.y][k+block.x] = 0;
+                        board[i+1+block.y][k+block.x] = 2;
+                        colorBoard[i+1+block.y][k+block.x] = colorBoard[i+block.y][k+block.x];
+                        colorBoard[i+block.y][k+block.x] = 0;
+                        colorBoard[i+1+block.y][k+block.x].position.y += SQUARE_SIZE;
+    
+                    }
                 }
             }
+            block.y++;
         }
-        block.setY(block.y+1);
     }
 
     function solidify() {
+        console.log("solidifying");
         for (let i = 0; i < block.shapeArray.length; i++) {
             for (let k = 0; k < block.shapeArray[i].length; k++) {
                 if (block.shapeArray[i][k] === 1) {
@@ -193,6 +189,7 @@ window.onload = function() {
         delete block.shapeArray;
         delete block.color;
         delete block.size;
+        block = null;
     }
 }
 

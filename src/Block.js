@@ -47,10 +47,6 @@ export default class Block {
         }
     }
 
-    setY(value) {
-        this.y = value;
-    }
-
     rotate() {
         let auxArr = new Array(this.shapeArray.length);
         for (let m = 0; m < auxArr.length; m++) {
