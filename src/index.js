@@ -146,11 +146,11 @@ window.onload = function() {
                             setTimeout(spawn, 3000);
                             
                             return 1;
-                        }
-    
-                        if (board[i+1][k+block.x] === 1) {
+                        } else if (board[i+1+block.y][k+block.x] === 1) {
                             //TODO: Found a square directly below the Block
-                            console.log("block reached square, call solidify()");
+                            console.log("block reached square");
+                            solidify();
+                            setTimeout(spawn, 3000);
                             return 2;
                         }
                     }
