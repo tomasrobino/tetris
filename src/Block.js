@@ -6,6 +6,8 @@ export default class Block {
     shapeArray;
     color;
     size = 3;
+    start = 0;
+    end = 3;
 
     constructor(shape, rot) {
         //Parses shape name to array
@@ -14,11 +16,13 @@ export default class Block {
                 this.shapeArray = [[1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]]
                 this.color = 0x00FFFF; //cyan
                 this.size = 4;
+                this.end = 1;
                 break;
             case 1:
                 this.shapeArray = [[1,1,0,0],[1,1,0,0],[0,0,0,0],[0,0,0,0]];
                 this.color = 0xFFFF00; //yellow
-                this.size = 4;
+                this.size = 2;
+                this.end = 2;
                 break;
             case 2:
                 this.shapeArray = [[1,1,1],[0,1,0],[0,0,0]];
@@ -89,6 +93,31 @@ export default class Block {
         for (let m = 0; m < outOfBoundsList.length; m++) {
             auxArr[outOfBoundsList[m][0]][limit - outOfBoundsList[m][1]] = 1;
         }
+
+        //Update start field
+        for1:
+        for (let k = 0; k < auxArr.length; k++) {
+            for (let i = 0; i < auxArr[k].length; i++) {
+                if (auxArr[i][k] === 1) {
+                    this.start = k;
+                    break for1;
+                }
+            }
+        }
+
+        //Update end field
+        for2:
+        for (let k = auxArr.length-1; k > -1; k--) {
+            for (let i = 0; i < auxArr[k].length; i++) {
+                if (auxArr[i][k] === 1) {
+                    this.end = k+1;
+                    break for2;
+                }
+            }
+        }
+
+        
+
         return auxArr;
     }
 }

@@ -48,6 +48,39 @@ function getBoard() {
 window.onload = function() {
     var app = new PIXI.Application({ width: WIDTH, height: HEIGHT, backgroundColor: 0x000000 });
     document.body.appendChild(app.view);
+
+    document.addEventListener('keydown', (event) => {
+        if (block !== null && block.y > 0) { //If block exists and is within visible board
+            if ((event.key === "a" || event.key === "A") && block.x+block.start > 0) {
+                for (let k = 0; k < block.shapeArray.length; k++) {
+                    for (let i = 0; i < block.shapeArray[k].length; i++) {
+                        if (block.shapeArray[i][k] === 1) {
+                            board[i+block.y][k+block.x] = 0;
+                            board[i+block.y][k-1+block.x] = 2;
+                            colorBoard[i+block.y][k-1+block.x] = colorBoard[i+block.y][k+block.x];
+                            colorBoard[i+block.y][k+block.x] = 0;
+                            colorBoard[i+block.y][k-1+block.x].position.x -= SQUARE_SIZE;
+                        }
+                    }
+                }
+                block.x--;
+            } else if ((event.key === "d" || event.key === "D") && block.x+block.end < BRD_WIDTH) {
+                for (let k = block.shapeArray.length-1; k > -1; k--) {
+                    for (let i = 0; i < block.shapeArray[k].length; i++) {
+                        if (block.shapeArray[i][k] === 1) {
+                            board[i+block.y][k+block.x] = 0;
+                            board[i+block.y][k+1+block.x] = 2;
+                            colorBoard[i+block.y][k+1+block.x] = colorBoard[i+block.y][k+block.x];
+                            colorBoard[i+block.y][k+block.x] = 0;
+                            colorBoard[i+block.y][k+1+block.x].position.x += SQUARE_SIZE;
+                        }
+                    }
+                }
+                block.x++;
+            }
+        }
+    });
+
     //Each square 50 width
     //Total width of playing field BRD_WIDTH * 50 = 500
 
@@ -59,7 +92,7 @@ window.onload = function() {
 
     //Draw background for playing field
     var fieldBackground = new PIXI.Graphics();
-    fieldBackground.beginFill(0xf52c1d);
+    fieldBackground.beginFill(0xffffff);
     fieldBackground.drawRect(OFFSET, 0, SQUARE_SIZE*BRD_WIDTH, SQUARE_SIZE*BRD_HEIGHT);
     fieldBackground.endFill();
 
@@ -104,7 +137,7 @@ window.onload = function() {
     function spawn() {
         //Creates a new block
         block = new Block(Math.floor(Math.random() * 7), Math.floor(Math.random() * 4)); //7 block shapes
-        block.x = Math.floor(Math.random() * (BRD_WIDTH-(block.size-1))); //TODO: Check it's not overwriting another block
+        block.x = Math.floor(Math.random() * (BRD_WIDTH-(block.size-1)));
         
         //Copy block's shapeArray to board array at defined spawn place
         //It'll spawn first in the invisible buffer zone (first 4 elements)
@@ -149,7 +182,7 @@ window.onload = function() {
                 }
             }
     
-            //Moves the block logically
+            //Moves the block
             for (let i = block.shapeArray.length-1; i > -1; i--) {
                 for (let k = 0; k < block.shapeArray[i].length; k++) {
                     if (block.shapeArray[i][k] === 1) {
