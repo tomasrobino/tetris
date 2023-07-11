@@ -47,12 +47,14 @@ export default class Block {
         }
         //Rotate shape as many times as asked
         for (let i = 0; i < rot; i++) {
-            this.shapeArray = this.rotate();
+            this.shapeArray = this.rotate()[0];
         }
     }
 
     rotate() {
         let auxArr = new Array(this.shapeArray.length);
+        let start = 0;
+        let end = 0;
         for (let m = 0; m < auxArr.length; m++) {
             auxArr[m] = [];
             for (let k = 0; k < this.shapeArray[0].length; k++) {
@@ -99,7 +101,7 @@ export default class Block {
         for (let k = 0; k < auxArr.length; k++) {
             for (let i = 0; i < auxArr[k].length; i++) {
                 if (auxArr[i][k] === 1) {
-                    this.start = k;
+                    start = k;
                     break for1;
                 }
             }
@@ -110,14 +112,12 @@ export default class Block {
         for (let k = auxArr.length-1; k > -1; k--) {
             for (let i = 0; i < auxArr[k].length; i++) {
                 if (auxArr[i][k] === 1) {
-                    this.end = k+1;
+                    end = k+1;
                     break for2;
                 }
             }
         }
-
         
-
-        return auxArr;
+        return [auxArr, start, end];
     }
 }
